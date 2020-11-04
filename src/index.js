@@ -6,6 +6,11 @@ const bodyParser = require('body-parser')
 const cors = require('cors')
 const helmet = require('helmet')
 const morgan = require('morgan')
+const jwt = require('express-jwt')
+const { expressJwtSecret } = require('jwks-rsa')
+
+const registerAccountingApi = require('./api/accounting')
+const registerUserApi = require('./api/users')
 
 require('dotenv').config()
 
@@ -15,8 +20,20 @@ app.use(helmet())
 app.use(bodyParser.json())
 app.use(cors())
 
-require('./api/accounting')(app)
-require('./api/users')(app)
+app.use(jwt({
+  secret: expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: 'https://dev-acwvtaph.us.auth0.com/.well-known/jwks.json',
+  }),
+  audience: 'https://oscar-api',
+  issuer: 'https://dev-acwvtaph.us.auth0.com/',
+  algorithms: ['RS256']
+}))
+
+registerAccountingApi(app)
+registerUserApi(app)
 
 app.listen(process.env.PORT, () => {
   console.log(`listening on ${process.env.PORT}`)
