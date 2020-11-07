@@ -15,7 +15,6 @@ class MongoDb {
 }
 
 class MongoDbCollection {
-
   static async insertOne ( collectionName, doc ) {
     const collection = await MongoDb.getCollection(collectionName)
     const result = await collection.insertOne(doc)
@@ -54,7 +53,6 @@ class MongoDbCollection {
 
     return result
   }
-
 }
 
 module.exports = {

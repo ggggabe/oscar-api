@@ -15,8 +15,11 @@ app.use(helmet())
 app.use(bodyParser.json())
 app.use(cors())
 
+
+
 require('./api/accounting')(app)
 require('./api/users')(app)
+require('./api/jobbies')(app)
 
 app.listen(process.env.PORT, () => {
   console.log(`listening on ${process.env.PORT}`)
@@ -44,5 +47,14 @@ app.listen(process.env.PORT, () => {
  * References:
  * [1] https://tools.ietf.org/html/rfc6749#section-1.2
  *
+ * 11/06/20
+ * REAL WORLD API USE & TEST WRITING
+ * As of a couple days ago we have an api server 80% of the
+ * way to operational, NGINX reverse-proxy, certbot,
+ * RECORDS, and path ready. Connections are closed and all
+ * that's left is to write tests before we deploy.
+ *
+ * 11/06/20
+ * Skeleton for jobbies API
  *
  * * * * * * * * * * * * * * * */

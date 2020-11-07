@@ -1,9 +1,8 @@
-/*
+/* * * * * * * * * * * * * * * * * *
  * PATH: src/models/user.js
  *
- *
- *
- * */
+ * * * * * * * * * * * * * * * * * */
+
 
 class User {
   static getUserId (user) {

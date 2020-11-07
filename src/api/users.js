@@ -42,8 +42,8 @@ router.route('/')
 router.route('/:userId')
   .patch( async ({ params, body }, res) => {
     const result = await UserDb.update({
-      params,
-      body
+      ...params,
+      ...body
     })
 
     res.send(result)
