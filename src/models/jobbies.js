@@ -14,10 +14,9 @@ class Jobbies {
       applicationLocation: data.applicationLocation || undefined,
     }
 
-
     const model = {}
 
-    Object.key(copy).forEach( field => {
+    Object.keys(copy).forEach( field => {
       if (copy[field] !== undefined) {
         model[field] = copy[field]
       }
@@ -27,9 +26,12 @@ class Jobbies {
   }
 
   static getId(data) {
-
-    return Jobbbies.makeModel(data).id || -1
+    const {
+      id,
+      _id
+    } = Jobbies.makeModel(data)
+    return id || _id || -1
   }
 }
 
-module.export = Jobbies
+module.exports = Jobbies

@@ -9,7 +9,8 @@
  * * * * * * * * * * * * * * * * * */
 
 const { MongoDb, MongoDbCollection } = require('../models/database')
-const JobbiesModel = require('../models/jobbies')
+const Jobbies = require('../models/jobbies')
+
 
 const COLLECTION_JOBBIES = 'jobbies'
 
@@ -80,34 +81,48 @@ class JobbiesDb {
   static async list() {
     const result = await MongoDbCollection.findAll(COLLECTION_JOBBIES)
 
-    return result.map( data => JobbiesModel.makeModel(data))
+    return result.map( data => Jobbies.makeModel(data))
   }
 
   static async create(data) {
     const payload = JobbiesDb.getCreatePayload(data)
-    const { insertedId } = await MongoDbCollection.insertOne(payload)
+    const id = await MongoDbCollection.insertOne(
+      COLLECTION_JOBBIES,
+      payload
+    )
 
     return {
-      id: insertedId
+      id
     }
+  }
+
+  static async read(data) {
+    const foundData = await MongoDbCollection.findOne(
+      COLLECTION_JOBBIES,
+      Jobbies.getId(data)
+    )
+
+    return Jobbies.makeModel(foundData)
   }
 
   static async update(data) {
     const payload = JobbiesDb.getUpdatePayload(data)
     const result = await MongoDbCollection.updateOne(
       COLLECTION_JOBBIES,
-      JobbiesModel.getId(data),
+      Jobbies.getId(data),
       payload
     )
 
-    const job = await MongoDbCollection.findOne(JobbiesModel.getId(data))
+    const foundData = await MongoDbCollection.findOne(
+      COLLECTION_JOBBIES,
+      Jobbies.getId(data)
+    )
 
-    return job
+    return Jobbies.makeModel(foundData)
   }
+
 }
 
 module.exports = {
   JobbiesDb
 }
-
-
