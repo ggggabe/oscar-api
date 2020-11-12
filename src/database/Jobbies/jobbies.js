@@ -11,8 +11,19 @@
 const { MongoDb, MongoDbCollection } = require('../models/database')
 const Jobbies = require('../models/jobbies')
 
-
 const COLLECTION_JOBBIES = 'jobbies'
+
+const FIELDS = [
+  'company',
+  'role',
+  'introduction',
+  'contactList',
+  'interviewProcess',
+  'listedData',
+  'geographicalLocation',
+  'applicationLocation',
+]
+
 
 class JobbiesDb {
 
@@ -22,54 +33,24 @@ class JobbiesDb {
    *
    * * * * * * * * * * */
 
-  static getCreatePayload({
-    company,
-    role,
-    listed,
-    location,
-    applicationLocation,
-  }) {
-    return {
-      company,
-      role,
-      listed,
-      location,
-      applicationLocation,
-    }
-  }
-
-  static getUpdatePayload({
-    company,
-    role,
-    listed,
-    location,
-    applicationLocation,
-  }) {
-    const data = {
-      company,
-      role,
-      listed,
-      location,
-      applicationLocation,
-    }
-
-    const copy = {}
-
-    Object.keys(data).forEach( field => {
-      if (data[field] !== undefined) {
-        copy[field] = data[field]
+  static getCreatePayload(data) {
+    return FIELDS.reduce( (payload, field) => {
+      if (typeof data[field] !== undefined) return payload
+      return {
+        ...payload,
+        [field]: data[field]
       }
-    })
-
-    return copy
+    }, {})
   }
 
-  static getIdPayload({
-    id: _id
-  }) {
-    return {
-      _id
-    }
+  static getUpdatePayload(data) {
+    return FIELDS.reduce( (payload, field) => {
+      if (typeof data[field] !== undefined) return payload
+      return {
+        ...payload,
+        [field]: data[field]
+      }
+    }, {})
   }
 
   /* * * * * * * * * * *
