@@ -15,19 +15,36 @@ router.route('/')
     const job = await JobbiesDb.create(body)
 
     if (!job) {
-      console.table({
-        ...body
-      })
-
       res.send({ code: 500 })
 
       return
     }
 
-    res.send(job)
+    res.send({
+      job
+    })
+  })
+
+router.route('/list')
+  .get( async (req, res) => {
+    const jobs = await JobbiesDb.list()
+    res.send(jobs)
   })
 
 router.route('/:id')
+  .get( async ({ params }, res) => {
+    const job = await JobbiesDb.read(params)
+
+    if (!job) {
+
+      res.send({ code: 404 })
+
+      return
+    }
+
+    res.send(job)
+
+  })
   .patch( async ({ params, body}, res) => {
     const job = await JobbiesDb.update({
       ...id,
@@ -35,12 +52,6 @@ router.route('/:id')
     })
 
     if (!job) {
-      console.table({
-        ...params
-      })
-      console.table({
-        ...body
-      })
 
       res.send({ code: 500 })
 
